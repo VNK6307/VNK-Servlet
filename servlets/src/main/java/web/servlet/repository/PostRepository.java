@@ -1,27 +1,40 @@
 package web.servlet.repository;
 
+import web.servlet.exception.NotFoundException;
 import web.servlet.model.Post;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
-// Stub
 public class PostRepository {
+    Map<Long, Post> postRepo = new ConcurrentHashMap<>();
+    AtomicLong atomicLong = new AtomicLong();
 
-    // TODO - Выбрать тип коллекции. Но тип переменных менять нельзя.
     public List<Post> all() {
-        return Collections.emptyList();
+        return new ArrayList<>(postRepo.values());
     }
 
     public Optional<Post> getById(long id) {
-        return Optional.empty();
+        return Optional.of(postRepo.getOrDefault(id, null));
     }
 
     public Post save(Post post) {
-        return post;
+        long idR;
+        if (post.getId() == 0) {
+            idR = atomicLong.getAndIncrement();
+            post.setId(idR);
+            return postRepo.put(post.getId(), post);
+        }
+        return postRepo.put(post.getId(), post);
+//        return post;
     }
 
     public void removeById(long id) {
+        if (postRepo.containsKey(id)) {
+            postRepo.remove(id);
+        } else {
+            throw new NotFoundException("Поста с таким номером не существует.");
+        }
     }
 }

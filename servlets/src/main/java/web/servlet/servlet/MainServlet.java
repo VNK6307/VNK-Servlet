@@ -4,13 +4,12 @@ import web.servlet.controller.PostController;
 import web.servlet.repository.PostRepository;
 import web.servlet.service.PostService;
 
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class MainServlet extends HttpServlet {
-
-
     private PostController controller;
 
     @Override
