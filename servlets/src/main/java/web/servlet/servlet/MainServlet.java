@@ -4,7 +4,6 @@ import web.servlet.controller.PostController;
 import web.servlet.repository.PostRepository;
 import web.servlet.service.PostService;
 
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +23,7 @@ public class MainServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            final var path = req.getRequestURI();
+            final String path = req.getRequestURI();
             final var method = req.getMethod();
 
             // primitive routing
@@ -33,23 +32,8 @@ public class MainServlet extends HttpServlet {
                 return;
             }
             if (method.equals("GET") && path.matches("/api/posts/\\d+")) {
-                // easy way
-//                final long id = Long.parseLong(path.substring(path.lastIndexOf("/"))); исходная строка
-//                final long id = Long.parseLong(path.substring(path.lastIndexOf("/")));
-//                controller.getById(id, resp);
-
-                long id;
-                Pattern pattern = Pattern.compile("/api/posts/(\\d+)");
-                Matcher matcher = pattern.matcher(path);
-
-                if (matcher.matches()) {
-                    String idStr = matcher.group(1);
-                    id = Long.parseLong(idStr);
-                } else {
-                    throw new IllegalArgumentException("Invalid path format");
-                }
+                long id = parseID(path);
                 controller.getById(id, resp);
-
                 return;
             }
             if (method.equals("POST") && path.equals("/api/posts")) {
@@ -57,9 +41,8 @@ public class MainServlet extends HttpServlet {
                 return;
             }
             if (method.equals("DELETE") && path.matches("/api/posts/\\d+")) {
-                // easy way
-                final long id = Long.parseLong(path.substring(path.lastIndexOf("/")));
-                controller.removeById(id, resp);
+                long idDel = parseID(path);
+                controller.removeById(idDel, resp);
                 return;
             }
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -68,5 +51,18 @@ public class MainServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
-}// MainServlet
 
+    private long parseID(String path) {
+        long id;
+        Pattern pattern = Pattern.compile("/api/posts/(\\d+)");
+        Matcher matcher = pattern.matcher(path);
+
+        if (matcher.matches()) {
+            String idStr = matcher.group(1);
+            id = Long.parseLong(idStr);
+        } else {
+            throw new IllegalArgumentException("Invalid path format");
+        }
+        return id;
+    }
+}

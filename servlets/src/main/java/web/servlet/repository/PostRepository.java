@@ -16,10 +16,8 @@ public class PostRepository {
     }
 
     public Optional<Post> getById(long id) {
-//        return Optional.of(postRepo.getOrDefault(id, null));
-        return Optional.of(postRepo.get(id));
-        //ToDo разобраться с возвратом
-
+        return Optional.of(postRepo.getOrDefault(id, null));
+//        return Optional.of(postRepo.get(id));
     }
 
     public Post save(Post post) {
@@ -27,13 +25,10 @@ public class PostRepository {
         if (post.getId() == 0) {
             idR = atomicLong.getAndIncrement();
             post.setId(idR);
-//            return postRepo.put(post.getId(), post);
             postRepo.put(post.getId(), post);
         }
-//        return postRepo.put(post.getId(), post);
         postRepo.put(post.getId(), post);
         return post;
-        // ToDo разобраться с возвратом
     }
 
     public void removeById(long id) {
