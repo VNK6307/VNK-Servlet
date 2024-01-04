@@ -8,6 +8,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainServlet extends HttpServlet {
     private PostController controller;
@@ -32,8 +34,22 @@ public class MainServlet extends HttpServlet {
             }
             if (method.equals("GET") && path.matches("/api/posts/\\d+")) {
                 // easy way
-                final long id = Long.parseLong(path.substring(path.lastIndexOf("/")));
+//                final long id = Long.parseLong(path.substring(path.lastIndexOf("/"))); исходная строка
+//                final long id = Long.parseLong(path.substring(path.lastIndexOf("/")));
+//                controller.getById(id, resp);
+
+                long id;
+                Pattern pattern = Pattern.compile("/api/posts/(\\d+)");
+                Matcher matcher = pattern.matcher(path);
+
+                if (matcher.matches()) {
+                    String idStr = matcher.group(1);
+                    id = Long.parseLong(idStr);
+                } else {
+                    throw new IllegalArgumentException("Invalid path format");
+                }
                 controller.getById(id, resp);
+
                 return;
             }
             if (method.equals("POST") && path.equals("/api/posts")) {
