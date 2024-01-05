@@ -1,8 +1,7 @@
 package web.servlet.servlet;
 
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import web.servlet.controller.PostController;
-import web.servlet.repository.PostRepository;
-import web.servlet.service.PostService;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +10,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MainServlet extends HttpServlet {
-    private PostController controller;
+    ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(
+            "applicationContext.xml"
+    );
+    private final PostController controller = context.getBean("controller", PostController.class);
     private final static String GET = "GET";
     private final static String POST = "POST";
     private final static String DELETE = "DELETE";
@@ -19,9 +21,6 @@ public class MainServlet extends HttpServlet {
 
     @Override
     public void init() {
-        final PostRepository repository = new PostRepository();
-        final PostService service = new PostService(repository);
-        controller = new PostController(service);
     }
 
     @Override
