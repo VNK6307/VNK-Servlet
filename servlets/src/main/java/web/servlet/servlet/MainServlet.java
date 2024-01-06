@@ -19,7 +19,7 @@ public class MainServlet extends HttpServlet {
     private final static String targetPath = "/api/posts";
 
     ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-    private PostController controller = context.getBean("controller", PostController.class);
+    private final PostController controller = context.getBean("controller", PostController.class);
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) {
