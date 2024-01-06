@@ -1,12 +1,13 @@
 package web.servlet.repository;
 
+import org.springframework.stereotype.Repository;
 import web.servlet.exception.NotFoundException;
 import web.servlet.model.Post;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-
+@Repository("repository")
 public class PostRepository {
     Map<Long, Post> postRepo = new ConcurrentHashMap<>();
     AtomicLong atomicLong = new AtomicLong();
