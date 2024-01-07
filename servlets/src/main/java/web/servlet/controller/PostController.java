@@ -1,8 +1,6 @@
 package web.servlet.controller;
 
 import com.google.gson.Gson;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import web.servlet.model.Post;
 import web.servlet.service.PostService;
 
@@ -10,12 +8,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Reader;
 
-@Controller("controller")
 public class PostController {
     public static final String APPLICATION_JSON = "application/json";
     private final PostService service;
 
-    @Autowired
     public PostController(PostService service) {
         this.service = service;
     }
@@ -28,7 +24,6 @@ public class PostController {
     }
 
     public void getById(long id, HttpServletResponse response) throws IOException {
-        // deserialize request & serialize response
         response.setContentType(APPLICATION_JSON);
         final var data = service.getById(id);
         final var gson = new Gson();
@@ -45,7 +40,6 @@ public class PostController {
     }
 
     public void removeById(long id, HttpServletResponse response) {
-        // deserialize request & serialize response
         service.removeById(id);
         response.setStatus(200);
     }

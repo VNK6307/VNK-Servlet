@@ -1,18 +1,14 @@
 package web.servlet.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import web.servlet.exception.NotFoundException;
 import web.servlet.model.Post;
 import web.servlet.repository.PostRepository;
 
 import java.util.List;
 
-@Service("service")
 public class PostService {
     private final PostRepository repository;
 
-    @Autowired
     public PostService(PostRepository repository) {
         this.repository = repository;
     }
