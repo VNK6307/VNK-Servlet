@@ -1,8 +1,9 @@
 package web.servlet.servlet;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import web.servlet.config.AppConfig;
 import web.servlet.controller.PostController;
-import web.servlet.repository.PostRepository;
-import web.servlet.service.PostService;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,18 +12,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MainServlet extends HttpServlet {
-    private PostController controller;
+
     private final static String GET = "GET";
     private final static String POST = "POST";
     private final static String DELETE = "DELETE";
     private final static String targetPath = "/api/posts";
 
-    @Override
-    public void init() {
-        final PostRepository repository = new PostRepository();
-        final PostService service = new PostService(repository);
-        controller = new PostController(service);
-    }
+    ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+    private final PostController controller = context.getBean("controller", PostController.class);
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) {
@@ -35,7 +32,6 @@ public class MainServlet extends HttpServlet {
                 controller.all(resp);
                 return;
             }
-//            if (method.equals(GET) && path.matches("/api/posts/\\d+")) {
             if (method.equals(GET) && path.matches(targetPath + "/\\d+")) {
                 long id = parseID(path);
                 controller.getById(id, resp);
